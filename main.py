@@ -1,3 +1,4 @@
+import sys
 import random
 #from flask import Flask
 import requests
@@ -24,13 +25,6 @@ def play_again():
         restart = input("Play Again?:\n(Y) - YES\n(N) - NO\n>>>").lower()
         if restart in ('y', 'n'):
             return restart == 'y'
-
-
-pokemon_id = random.randint(1, 150)
-random_pk_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}/")
-random_pk_species_response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_id}/")
-random_pk = random_pk_response.json()
-random_pk_species = random_pk_species_response.json()
 
 def main():
     play_game = True 
@@ -79,8 +73,31 @@ def main():
             if hidden_pokemon.check_guess(pkmn):
                 win = True
                 break
-            
-
-
-
+            else:
+                pkmn.declare_height_and_weight()
+                print("So...")
+                if hidden_pokemon.is_taller_than(pkmn):
+                    print("I am taller and",  end=' ')
+                else:
+                    print("I am shorter and", end=' ')
+                if hidden_pokemon.is_heavier_than(pkmn):
+                    print(f"heavier than {pkmn.name}\n")
+                else:
+                    print(f"lighter than {pkmn.name}\n")
+                if (not hidden_pokemon.poketype_revealed) and (hidden_pokemon.has_same_type_as(pkmn)):
+                    hidden_pokemon.reveal_type()
+                if (not hidden_pokemon.color_revealed) and (hidden_pokemon.has_same_color_as(pkmn)):
+                    hidden_pokemon.reveal_color()
+        if win:
+            print(f"You're right!! I am {hidden_pokemon.name}")
+            print(f"You found me with {guesses} guesses\n")
+        else:
+            print(f"You lost... I'm {hidden_pokemon.name}\n")
+        
+        play_game = play_again()
     
+    sys.exit("Thanks for playing!!!")
+
+
+if __name__ == "__main__":
+    main()
