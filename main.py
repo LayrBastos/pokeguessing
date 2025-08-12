@@ -63,11 +63,23 @@ def main():
                 guessed_pk_species_response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{guess}/")
                 guessed_pk = guessed_pk_response.json()
                 guessed_pk_species = guessed_pk_species_response.json()
-                #pkmn = instanciar e terminar ################################
+                pkmn = Pokemon(name=guessed_pk['name'],
+                               height=guessed_pk['height'],
+                               weight=guessed_pk['height'],
+                               poketype=guessed_pk['types'][0]['type']['name'],
+                               color=guessed_pk_species['color']['name'])
 
             except AttributeError:
-                print(f"{guess.capitalize()}...?  I don't know that pokemon...\nCheck the spelling and try again. I won't count that as a guess.")
+                print(f"{guess.capitalize()}...? I don't know that pokemon...\nCheck the spelling and try again. I won't count that as a guess.")
                 continue
+
+            else:
+                guesses += 1
+
+            if hidden_pokemon.check_guess(pkmn):
+                win = True
+                break
+            
 
 
 

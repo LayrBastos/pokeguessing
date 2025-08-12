@@ -4,7 +4,6 @@ def height(h):
     else:
         return f"{h / 10}m"
     
-
 def weight(w):
     w /= 10
     return f"{round(w, 1)}kg"
