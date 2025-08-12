@@ -14,7 +14,7 @@ def select_level():
         else:
             print("Invalid Input.")
 
-def max_guesses(n):
+def number_of_guesses(n):
     if n == '1':
         return 20
     elif n == '2':
@@ -27,7 +27,13 @@ def play_again():
             return restart == 'y'
 
 def main():
-    play_game = True 
+    play_game = True
+
+    level = select_level()
+    guesses = 0
+    max_guesses = number_of_guesses(level)
+    guesses_list = ['o' for g in range(max_guesses)]
+
     while play_game:
         pokemon_id = random.randint(1, 150)
         random_pk_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_id}/")
@@ -41,15 +47,14 @@ def main():
                                  poketype=random_pk['types'][0]['type']['name'],
                                  color=random_pk_species['color']['name'])
 
-        level = select_level()
-        max_guesses = max_guesses(level)
-        guesses = 0
 
         while guesses < max_guesses:
             win = False
-            if guesses > 0:
-                print(f"Guesses: {guesses}\n")
-                print("+" * 20)
+
+            print("Guesses -> |", end=' ')
+            for i in guesses_list:
+                print(i, end=' | ')
+            print()
             
             guess = input("Guess who I am: ").lower()
             try:
@@ -59,7 +64,7 @@ def main():
                 guessed_pk_species = guessed_pk_species_response.json()
                 pkmn = Pokemon(name=guessed_pk['name'],
                                height=guessed_pk['height'],
-                               weight=guessed_pk['height'],
+                               weight=guessed_pk['weight'],
                                poketype=guessed_pk['types'][0]['type']['name'],
                                color=guessed_pk_species['color']['name'])
 
@@ -68,7 +73,10 @@ def main():
                 continue
 
             else:
+                guesses_list[guesses] = 'X'
                 guesses += 1
+                print(guesses_list)
+
 
             if hidden_pokemon.check_guess(pkmn):
                 win = True
@@ -85,9 +93,9 @@ def main():
                 else:
                     print(f"lighter than {pkmn.name}\n")
                 if (not hidden_pokemon.poketype_revealed) and (hidden_pokemon.has_same_type_as(pkmn)):
-                    hidden_pokemon.reveal_type()
+                    hidden_pokemon.reveal_type(pkmn)
                 if (not hidden_pokemon.color_revealed) and (hidden_pokemon.has_same_color_as(pkmn)):
-                    hidden_pokemon.reveal_color()
+                    hidden_pokemon.reveal_color(pkmn)
         if win:
             print(f"You're right!! I am {hidden_pokemon.name}")
             print(f"You found me with {guesses} guesses\n")
