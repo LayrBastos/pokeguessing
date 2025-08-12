@@ -52,7 +52,22 @@ def main():
         guesses = 0
 
         while guesses < max_guesses:
+            win = False
+            if guesses > 0:
+                print(f"Guesses: {guesses}\n")
+                print("+" * 20)
+            
+            guess = input("Guess who I am: ").lower()
+            try:
+                guessed_pk_response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{guess}/")
+                guessed_pk_species_response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{guess}/")
+                guessed_pk = guessed_pk_response.json()
+                guessed_pk_species = guessed_pk_species_response.json()
+                #pkmn = instanciar e terminar ################################
 
+            except AttributeError:
+                print(f"{guess.capitalize()}...?  I don't know that pokemon...\nCheck the spelling and try again. I won't count that as a guess.")
+                continue
 
 
 
