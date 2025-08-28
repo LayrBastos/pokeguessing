@@ -1,9 +1,7 @@
 import sys
 import random
-#from flask import Flask
 import requests
 from pokemon import Pokemon
-from conversion import height, weight
 
 
 def select_level():
@@ -75,7 +73,6 @@ def main():
             else:
                 guesses_list[guesses] = 'X'
                 guesses += 1
-                print(guesses_list)
 
 
             if hidden_pokemon.check_guess(pkmn):
