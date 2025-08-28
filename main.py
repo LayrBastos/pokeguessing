@@ -23,6 +23,8 @@ def play_again():
         restart = input("Play Again?:\n(Y) - YES\n(N) - NO\n>>>").lower()
         if restart in ('y', 'n'):
             return restart == 'y'
+        else:
+            print("Invalid Input.")
 
 def main():
     play_game = True
